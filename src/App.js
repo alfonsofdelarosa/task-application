@@ -1,31 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import "./App.css";
 
 function App() {
   const [title, setTitle] = useState("");
   const [tasks, setTasks] = useState([]);
+  const inputRef = useRef();
+  const listRef = useRef();
 
-  const pendingTask = tasks.length
+  const pendingTasks = tasks.length;
+
+  useEffect(() => {
+    document.title = pendingTasks + " tasks remaining";
+  }, [pendingTasks]);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   return (
     <div>
-      <h1>Todo List</h1>
-      <p>Pending tasks: {pendingTask}</p>
-      <div>
-        <input
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          type="text"
-        />
-        <button 
-          onClick={() => {
+      <h1>Task Manager</h1>
+      <p>Pending tasks: {pendingTasks}</p>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
           setTasks([title, ...tasks]);
           setTitle("");
+          inputRef.current.focus();
+          listRef.current.scrollTop = 0;
         }}
-        >
-          Add
-        </button>
-      </div>
-      <ul>
+      >
+        <input
+          ref={inputRef}
+          type="text"
+          value={title}
+          onChange={(event) => {
+            setTitle(event.target.value);
+          }}
+        />
+        <button type="submit">Add</button>
+      </form>
+      <ul ref={listRef} className="task-list">
         {tasks.map((task) => {
           return (
             <li
@@ -38,17 +53,6 @@ function App() {
           );
         })}
       </ul>
-      {tasks.length > 0 ? (
-        <button
-          onClick={() => {
-            setTasks([]);
-          }}
-        >
-          Complete all tasks
-        </button>
-      ) : (
-        <div />
-      )}
     </div>
   );
 }
