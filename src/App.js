@@ -1,23 +1,60 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
 
 function App() {
+  const [title, setTitle] = useState("");
+  const [tasks, setTasks] = useState([]);
+
+  const pendingTask = tasks.length
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          ya he hecho un cambio y he recargado
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div>
+      <h1>Todo List</h1>
+      <p>Pending tasks: {pendingTask}</p>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          setTasks([title, ...tasks]);
+          setTitle("");
+        }}
+      >
+        <input
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          type="text"
+        />
+        <button 
+          onClick={() => {
+          setTasks([title, ...tasks]);
+          setTitle("");
+        }}
         >
-          Learn React
-        </a>
-      </header>
+          Add
+        </button>
+      </form>
+      <ul>
+        {tasks.map((task) => {
+          return (
+            <li
+              onClick={() => {
+                setTasks(tasks.filter((t) => t !== task));
+              }}
+            >
+              {task}
+            </li>
+          );
+        })}
+      </ul>
+      {tasks.length > 0 ? (
+        <button
+          onClick={() => {
+            setTasks([]);
+          }}
+        >
+          Complete all tasks
+        </button>
+      ) : (
+        <div />
+      )}
     </div>
   );
 }
