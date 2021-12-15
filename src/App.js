@@ -10,13 +10,7 @@ function App() {
     <div>
       <h1>Todo List</h1>
       <p>Pending tasks: {pendingTask}</p>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          setTasks([title, ...tasks]);
-          setTitle("");
-        }}
-      >
+      <div>
         <input
           value={title}
           onChange={(event) => setTitle(event.target.value)}
@@ -30,7 +24,7 @@ function App() {
         >
           Add
         </button>
-      </form>
+      </div>
       <ul>
         {tasks.map((task) => {
           return (
